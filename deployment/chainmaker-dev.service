@@ -1,0 +1,25 @@
+﻿[Unit]
+Description=ChainMaker Dev Environment
+After=network.target mongod.service
+Wants=mongod.service
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/chainmaker-dev
+EnvironmentFile=/var/www/chainmaker-dev/.env
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=chainmaker-dev
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/www/chainmaker-dev/public/user_images /var/lib/chainmaker-dev
+
+[Install]
+WantedBy=multi-user.target
