@@ -63,24 +63,62 @@ curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
 ```
 
-### 3. Create Directories
+### 3. Clone Repository and Build
 
 **Production:**
 ```bash
+# Clone the repository
+cd /tmp
+git clone https://github.com/ZachHunt359/ChainMakerWeb.git chainmaker-temp
+cd chainmaker-temp
+
+# Install dependencies and build
+npm install
+npm run build
+
+# Move to production location
 sudo mkdir -p /var/www/chainmaker
 sudo mkdir -p /var/lib/chainmaker
+sudo cp -r * /var/www/chainmaker/
 sudo mkdir -p /var/www/chainmaker/public/user_images
 sudo chown -R www-data:www-data /var/www/chainmaker
 sudo chown -R www-data:www-data /var/lib/chainmaker
+
+# Create .env file
+sudo nano /var/www/chainmaker/.env
+# Paste the production environment variables (see Environment Variables section)
+
+# Clean up
+cd ~
+rm -rf /tmp/chainmaker-temp
 ```
 
 **Dev:**
 ```bash
+# Clone the repository
+cd /tmp
+git clone https://github.com/ZachHunt359/ChainMakerWeb.git chainmaker-dev-temp
+cd chainmaker-dev-temp
+
+# Install dependencies and build
+npm install
+npm run build
+
+# Move to dev location
 sudo mkdir -p /var/www/chainmaker-dev
 sudo mkdir -p /var/lib/chainmaker-dev
+sudo cp -r * /var/www/chainmaker-dev/
 sudo mkdir -p /var/www/chainmaker-dev/public/user_images
 sudo chown -R www-data:www-data /var/www/chainmaker-dev
 sudo chown -R www-data:www-data /var/lib/chainmaker-dev
+
+# Create .env file for dev
+sudo nano /var/www/chainmaker-dev/.env
+# Paste the dev environment variables (see Environment Variables section)
+
+# Clean up
+cd ~
+rm -rf /tmp/chainmaker-dev-temp
 ```
 
 ### 4. Install systemd Service
