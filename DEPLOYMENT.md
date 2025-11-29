@@ -24,7 +24,7 @@ Complete deployment guide for ChainMaker on Ubuntu 24.04 VPS with chainmaker.que
 ### 1. Build the Application
 
 ```
-cd C:\Users\khayy\source\repos\ChainMakerWeb
+cd C:\...\ChainMakerWeb
 npm install
 npm run build
 ```
@@ -41,10 +41,17 @@ Visit http://localhost:3000
 ### 1. Install MongoDB
 
 ```bash
-wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | sudo apt-key add -
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+# Import MongoDB GPG key (modern method)
+curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | sudo gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg
+
+# Add MongoDB repository
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+
+# Install MongoDB
 sudo apt update
 sudo apt install -y mongodb-org
+
+# Enable and start MongoDB service
 sudo systemctl enable mongod
 sudo systemctl start mongod
 ```
