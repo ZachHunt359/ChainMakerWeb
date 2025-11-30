@@ -15,11 +15,9 @@ StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=chainmaker
 
-NoNewPrivileges=true
+# Simplified security settings to avoid NAMESPACE errors
 PrivateTmp=true
-ProtectSystem=strict
-ProtectHome=true
-ReadWritePaths=/var/www/chainmaker/public/user_images /var/lib/chainmaker
+ReadWritePaths=/var/www/chainmaker/public/user_images
 
 [Install]
 WantedBy=multi-user.target
