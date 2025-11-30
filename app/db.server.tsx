@@ -30,29 +30,39 @@ export async function loadLegacy(accessCode: string) {
     return await LegacyModel.findOne({ accessCode: accessCode }).exec();
 }
 
-async function syncWithOriginalServer() {
+export async function syncWithOriginalServer() {
 
     const con = await mysql.createConnection({
-        host: "198.22.162.69",
-        user: "admin",
-        password: "limitslimits123",
-        database: "jumpchainDB"
+        host: process.env.LEGACY_MYSQL_HOST || "198.22.162.69",
+        user: process.env.LEGACY_MYSQL_USER || "admin",
+        password: process.env.LEGACY_MYSQL_PASSWORD || "",
+        database: process.env.LEGACY_MYSQL_DATABASE || "jumpchainDB"
     });
 
     let [rows,] = await con.query<RowDataPacket[]>(
         `SELECT DataPath, AccessKey FROM Chains WHERE EditPermissions = 1`
     );
 
+    let added = 0;
+    let skipped = 0;
+
     for (let row of rows) {
-        if (await loadLegacy(row["AccessKey"]))
+        if (await loadLegacy(row["AccessKey"])) {
+            skipped++;
             continue;
+        }
         let newDoc = new LegacyModel({
             accessCode: row["AccessKey"],
             fileName: row["DataPath"],
             migrated: ""
         });
-        newDoc.save();
+        await newDoc.save();
+        added++;
     }
+
+    await con.end();
+
+    return { added, skipped, total: rows.length };
 }
 
 export async function deleteChain(chainId : string){

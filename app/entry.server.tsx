@@ -6,7 +6,6 @@ import { RemixServer } from "@remix-run/react";
 import * as isbotModule from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import mongoose from "mongoose";
-import {syncWithOriginalServer} from "./db.server"
 
 
 const ABORT_DELAY = 5_000;

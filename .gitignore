@@ -3,3 +3,7 @@ node_modules
 /.cache
 /build
 .env
+.env.*
+
+# Private documentation with credentials and deployment info
+/docs
