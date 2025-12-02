@@ -107,8 +107,6 @@ export async function action({
         }
     }
 
-
-
-
-    return "";
+    let newID = (await uploadChain(JSON.parse(exportChainFragment(chain))))[0];
+    return redirect(`/chain/${newID}`);
 }
