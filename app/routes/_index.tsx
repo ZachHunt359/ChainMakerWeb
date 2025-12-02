@@ -93,31 +93,33 @@ export default function Index() {
       <div className="extra-roomy-cell mild-outline rounded-rect neutral-highlight vspaced-big">
         <div className="logo-text vspaced center-text-align">Create New Chain</div>
         <div className="right-weighted-column extra-roomy-cell">
-          <Form className="container" action="/api/new" ref={formRef} method="POST">
+          <div className="container">
             <span className="bold vcentered right-align-self">Chain Name:</span>{" "}
             <input
               className="compact-cell"
               defaultValue="[untitled chain]"
               autoFocus
               name="title"
+              data-form-field="title"
             />
             <span className="bold vcentered right-align-self">Jumper Name:</span>{" "}
-            <input className="compact-cell vspaced" defaultValue="Jumper" name="jumper" />
+            <input className="compact-cell vspaced" defaultValue="Jumper" name="jumper" data-form-field="jumper" />
             <span className="bold vcentered right-align-self">Name of First Jump:</span>{" "}
-            <input className="compact-cell" defaultValue="[untitled jump]" name="jump" />
+            <input className="compact-cell" defaultValue="[untitled jump]" name="jump" data-form-field="jump" />
             <span className="bold vcentered right-align-self">Jumpdoc URL:</span>{" "}
             <input
               className="compact-cell vspaced"
               defaultValue=""
               placeholder="optional"
               name="jumpURL"
+              data-form-field="jumpURL"
             />
             <div
               className="vcentered center-text-align row clickable"
               onClick={() => setUseReality((a) => !a)}
             >
               <span className="right-align-self">
-                <CheckBox name={"warehouseMod"} value={useReality} />
+                <input type="checkbox" checked={useReality} onChange={() => {}} data-form-field="warehouseMod" />
               </span>
               <span className="roomy-cell vcentered">
                 Use&nbsp;
@@ -139,7 +141,7 @@ export default function Index() {
               onClick={() => setUseBodyMod((a) => !a)}
             >
               <span className="right-align-self">
-                <CheckBox name={"bodyMod"} value={useBodyMod} />
+                <input type="checkbox" checked={useBodyMod} onChange={() => {}} data-form-field="bodyMod" />
               </span>
               <span className="roomy-cell vcentered">
                 Use&nbsp;
@@ -157,12 +159,39 @@ export default function Index() {
               </span>
             </div>
             <div></div>
-            <input
-              type="submit"
-              value="Create!"
+            <button
+              type="button"
               className="clickable roomy-cell subtle-rounded mild-outline center-text-align medium-highlight"
-            />
-          </Form>
+              onClick={() => {
+                // Create form and submit directly - completely bypass Remix
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/api/new';
+                form.style.display = 'none';
+                
+                // Get all input values
+                const inputs = document.querySelectorAll('[data-form-field]');
+                inputs.forEach((element: any) => {
+                  const input = document.createElement('input');
+                  input.type = 'hidden';
+                  input.name = element.getAttribute('data-form-field');
+                  
+                  if (element.type === 'checkbox') {
+                    input.value = element.checked ? '1' : '0';
+                  } else {
+                    input.value = element.value || '';
+                  }
+                  
+                  form.appendChild(input);
+                });
+                
+                document.body.appendChild(form);
+                form.submit();
+              }}
+            >
+              Create!
+            </button>
+          </div>
         </div>
       </div>
     );
